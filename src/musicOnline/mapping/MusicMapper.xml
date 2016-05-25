@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="musicOnline.mapping.MusicMapper">
+	<select id="findAll" resultType="Music">
+		select * from MUSIC
+	</select>
+	<select id="findByUserId" parameterType="Integer" resultType="Music">
+		select MUSICID AS ID,TITLE,URL,ARTIST,ALBUM,DURATION from LOVEMUSIC join MUSIC on musicid = MUSIC.ID where userid = #{userid}  
+	</select>
+	<insert id="addLoveMusic">
+		insert IGNORE into LOVEMUSIC values (NULL,#{0},#{1})
+	</insert>
+</mapper>

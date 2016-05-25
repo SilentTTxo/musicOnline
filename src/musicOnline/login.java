@@ -1,7 +1,10 @@
 package musicOnline;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.omg.CORBA.PRIVATE_MEMBER;
@@ -11,13 +14,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.portlet.ModelAndView;
 
+import musicOnline.data.Music;
 import musicOnline.data.User;
+import musicOnline.mapping.MusicMapper;
 import musicOnline.mapping.UserMapper;
 
 @Controller
 public class login {
 	@Resource
 	private UserMapper userMapper;
+	@Resource
+	private MusicMapper musicMapper;
 	JSONObject ans = null;
 	
 	@ResponseBody
@@ -63,5 +70,53 @@ public class login {
 			ans.put("content", "注册成功");
 		}
 		return ans.toString();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="musiclist",method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
+	public String musicList(Integer userid,Integer musicid) throws JSONException{
+		if(userid == null){
+			JSONArray ans = new JSONArray();
+			List<Music> xx = musicMapper.findAll();
+			for(Music temp : xx){
+				JSONObject js = new JSONObject();
+				js.put("id", temp.getId());
+				js.put("album", temp.getAlbum());
+				js.put("artist", temp.getArtist());
+				js.put("title", temp.getTitle());
+				js.put("url", temp.getUrl());
+				js.put("duration", temp.getDuration());
+				ans.put(js);
+			}
+			return ans.toString();
+		}
+		else if(musicid == null){
+			JSONArray ans = new JSONArray();
+			List<Music> xx = musicMapper.findByUserId(userid);
+			for(Music temp : xx){
+				JSONObject js = new JSONObject();
+				js.put("id", temp.getId());
+				js.put("album", temp.getAlbum());
+				js.put("artist", temp.getArtist());
+				js.put("title", temp.getTitle());
+				js.put("url", temp.getUrl());
+				js.put("duration", temp.getDuration());
+				ans.put(js);
+			}
+			return ans.toString();
+		}
+		else {
+			ans = new JSONObject();
+			int state = musicMapper.addLoveMusic(userid, musicid);
+			if(state == 0){
+				ans.put("state", state);
+				ans.put("content", "请勿插入重复数据");
+			}
+			else {
+				ans.put("state", state);
+				ans.put("content", "添加成功");
+			}
+			return ans.toString();
+		}
 	}
 }
