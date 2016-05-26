@@ -11,7 +11,10 @@
 	<insert id="addLoveMusic">
 		insert IGNORE into LOVEMUSIC values (NULL,#{0},#{1})
 	</insert>
-	<insert id="delLoveMusic">
+	<delete id="delLoveMusic">
 		DELETE FROM LOVEMUSIC where userid = #{0} and musicid = #{1}
+	</delete>
+	<insert id="addMusic">
+		insert IGNORE into MUSIC values (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7})
 	</insert>
 </mapper>

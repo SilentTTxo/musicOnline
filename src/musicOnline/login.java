@@ -1,9 +1,11 @@
 package musicOnline;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.httpclient.HttpException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,7 +76,13 @@ public class login {
 	
 	@ResponseBody
 	@RequestMapping(value="musiclist",method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
-	public String musicList(Integer cmd,Integer userid,Integer musicid) throws JSONException{
+	public String musicList(Integer cmd,Integer userid,Integer musicid,Integer type) throws JSONException, HttpException, IOException{
+		if(cmd == null){
+			ans = new JSONObject();
+			ans.put("state", -1);
+			ans.put("content", "狗子的带上参数");
+			return ans.toString();
+		}
 		if(cmd == 1){//获取所有歌曲列表
 			JSONArray ans = new JSONArray();
 			List<Music> xx = musicMapper.findAll();
@@ -131,9 +139,12 @@ public class login {
 			}
 			return ans.toString();
 		}
-		ans = new JSONObject();
-		ans.put("state", -1);
-		ans.put("content", "狗子的带上参数");
-		return ans.toString();
+		if(cmd == 99){//本地debug接口
+			ans = new JSONObject();
+			getData yData = new getData();
+			yData.musicMapper = musicMapper;
+			return yData.getWow("baidu.ting.billboard.billList", type, 100, 0).toString();
+		}
+		return "参数不合法";
 	}
 }
