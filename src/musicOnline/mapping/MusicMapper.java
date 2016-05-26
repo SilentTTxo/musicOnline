@@ -8,4 +8,5 @@ public interface MusicMapper {
 	List<Music> findAll();
 	List<Music> findByUserId(Integer userid);
 	int addLoveMusic(Integer userid,Integer musicid);
+	int delLoveMusic(Integer userid,Integer musicid);
 }

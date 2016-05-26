@@ -74,8 +74,8 @@ public class login {
 	
 	@ResponseBody
 	@RequestMapping(value="musiclist",method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
-	public String musicList(Integer userid,Integer musicid) throws JSONException{
-		if(userid == null){
+	public String musicList(Integer cmd,Integer userid,Integer musicid) throws JSONException{
+		if(cmd == 1){//获取所有歌曲列表
 			JSONArray ans = new JSONArray();
 			List<Music> xx = musicMapper.findAll();
 			for(Music temp : xx){
@@ -90,7 +90,7 @@ public class login {
 			}
 			return ans.toString();
 		}
-		else if(musicid == null){
+		if(cmd == 2){//获取用户最喜欢
 			JSONArray ans = new JSONArray();
 			List<Music> xx = musicMapper.findByUserId(userid);
 			for(Music temp : xx){
@@ -105,7 +105,7 @@ public class login {
 			}
 			return ans.toString();
 		}
-		else {
+		if(cmd == 3){//插入最喜欢
 			ans = new JSONObject();
 			int state = musicMapper.addLoveMusic(userid, musicid);
 			if(state == 0){
@@ -118,5 +118,22 @@ public class login {
 			}
 			return ans.toString();
 		}
+		if(cmd == 4){//删除最喜欢
+			ans = new JSONObject();
+			int state = musicMapper.delLoveMusic(userid, musicid);
+			if(state == 0){
+				ans.put("state", state);
+				ans.put("content", "数据不存在");
+			}
+			else {
+				ans.put("state", state);
+				ans.put("content", "删除成功");
+			}
+			return ans.toString();
+		}
+		ans = new JSONObject();
+		ans.put("state", -1);
+		ans.put("content", "狗子的带上参数");
+		return ans.toString();
 	}
 }
