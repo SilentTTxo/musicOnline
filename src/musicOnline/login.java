@@ -27,6 +27,9 @@ public class login {
 	private UserMapper userMapper;
 	@Resource
 	private MusicMapper musicMapper;
+	
+	private getData yData = new getData();
+	
 	JSONObject ans = null;
 	
 	@ResponseBody
@@ -76,7 +79,8 @@ public class login {
 	
 	@ResponseBody
 	@RequestMapping(value="musiclist",method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
-	public String musicList(Integer cmd,Integer userid,Integer musicid,Integer type) throws JSONException, HttpException, IOException{
+	public String musicList(Integer cmd,Integer userid,Integer musicid,Integer type,String name) throws JSONException, HttpException, IOException{
+		yData.musicMapper = musicMapper;
 		if(cmd == null){
 			ans = new JSONObject();
 			ans.put("state", -1);
@@ -94,6 +98,8 @@ public class login {
 				js.put("title", temp.getTitle());
 				js.put("url", temp.getUrl());
 				js.put("duration", temp.getDuration());
+				js.put("lrc", temp.getLrc());
+				js.put("img", temp.getImg());
 				ans.put(js);
 			}
 			return ans.toString();
@@ -109,6 +115,8 @@ public class login {
 				js.put("title", temp.getTitle());
 				js.put("url", temp.getUrl());
 				js.put("duration", temp.getDuration());
+				js.put("lrc", temp.getLrc());
+				js.put("img", temp.getImg());
 				ans.put(js);
 			}
 			return ans.toString();
@@ -139,10 +147,17 @@ public class login {
 			}
 			return ans.toString();
 		}
+		if(cmd == 5){//按歌曲名查找
+			return yData.findMusic(name).toString();
+		}
+		if(cmd == 6){//根据歌曲id获取歌曲各种信息并且附带播放url
+			ans = new JSONObject();
+			JSONObject temp = yData.findMusicByIdFromBaidu(musicid);
+			ans.put("url", temp.get("file_link"));
+			return ans.toString();
+		}
 		if(cmd == 99){//本地debug接口
 			ans = new JSONObject();
-			getData yData = new getData();
-			yData.musicMapper = musicMapper;
 			return yData.getWow("baidu.ting.billboard.billList", type, 100, 0).toString();
 		}
 		return "参数不合法";

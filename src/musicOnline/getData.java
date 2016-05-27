@@ -1,6 +1,7 @@
 package musicOnline;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -12,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import musicOnline.data.Music;
 import musicOnline.mapping.MusicMapper;
 
 public class getData {
@@ -41,5 +43,64 @@ public class getData {
 	    }
 	    //getWow(method, type, size, offset+size);
 	    return gData;
+	}
+	public JSONArray findMusic(String name) throws HttpException, IOException, JSONException{
+		String Lname = "%"+name+"%";
+		JSONArray ans = new JSONArray();
+		HttpClient client = new HttpClient();
+		PostMethod postMethod = new PostMethod(baseurl);
+		postMethod.addParameter("method","baidu.ting.search.catalogSug");
+		postMethod.addParameter("query",name);
+		client.getParams().setParameter(
+	            HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
+	    // 执行并返回状态
+	    int status = client.executeMethod(postMethod);
+	    String data = postMethod.getResponseBodyAsString();
+	    JSONObject gData = new JSONObject(data);
+	    JSONArray songlist = gData.getJSONArray("song");
+	    for(int i = 0;i<songlist.length();i++){
+	    	JSONObject xx = songlist.getJSONObject(i);
+	    	musicMapper.addMusic(Integer.parseInt(xx.get("songid").toString()), xx.get("songname").toString(), "active", xx.get("artistname").toString(), "-1", -1, "-1","-1");
+	    }
+		List<Music> xx = musicMapper.findByName(Lname);
+		for(Music temp : xx){
+			JSONObject js = new JSONObject();
+			js.put("id", temp.getId());
+			js.put("album", temp.getAlbum());
+			js.put("artist", temp.getArtist());
+			js.put("title", temp.getTitle());
+			js.put("url", temp.getUrl());
+			js.put("duration", temp.getDuration());
+			js.put("lrc", temp.getLrc());
+			js.put("img", temp.getImg());
+			ans.put(js);
+		}
+	    return ans;
+	}
+	public JSONObject findMusicByIdFromBaidu(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
+		JSONObject ans = new JSONObject();
+		HttpClient client = new HttpClient();
+		PostMethod postMethod = new PostMethod(baseurl);
+		postMethod.addParameter("method","baidu.ting.song.downWeb");
+		postMethod.addParameter("songid",musicid+"");
+		client.getParams().setParameter(
+	            HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
+	    // 执行并返回状态
+	    int status = client.executeMethod(postMethod);
+	    String data = postMethod.getResponseBodyAsString();
+	    JSONObject gData = new JSONObject(data);
+	    
+	    
+	    JSONObject songinfo = gData.getJSONObject("songinfo");
+	    
+	    
+	    JSONArray bitrate = gData.getJSONArray("bitrate");
+	    JSONObject xx = bitrate.getJSONObject(0);
+	    ans.put("url", xx.get("file_link"));
+	    
+	    musicMapper.delMusic(musicid);
+	    musicMapper.addMusic(musicid, songinfo.getString("title"), "active", songinfo.getString("author"), songinfo.getString("album_title"), Integer.parseInt(xx.getString("file_duration")), songinfo.getString("pic_big"), songinfo.getString("lrclink"));
+	    
+		return xx;
 	}
 }

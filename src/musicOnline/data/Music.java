@@ -2,7 +2,7 @@ package musicOnline.data;
 
 public class Music {
 	private int id,duration;
-	private String title,url,artist,album;
+	private String title,url,artist,album,lrc,img;
 	
 	public int getId() {
 		return id;
@@ -18,6 +18,18 @@ public class Music {
 	}
 	public String getTitle() {
 		return title;
+	}
+	public String getLrc() {
+		return lrc;
+	}
+	public void setLrc(String lrc) {
+		this.lrc = lrc;
+	}
+	public String getImg() {
+		return img;
+	}
+	public void setImg(String img) {
+		this.img = img;
 	}
 	public void setTitle(String title) {
 		this.title = title;
