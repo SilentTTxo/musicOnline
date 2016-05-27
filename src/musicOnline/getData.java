@@ -97,10 +97,12 @@ public class getData {
 	    
 	    
 	    JSONArray bitrate = gData.getJSONArray("bitrate");
-	    JSONObject xx = bitrate.getJSONObject(2);//设置音质
-	    if(xx == null){
-	    	xx = bitrate.getJSONObject(1);
+	    JSONObject xx = null;//设置音质
+	    int bt = 2;
+	    while(bitrate.getJSONObject(bt)==null){
+	    	bt--;
 	    }
+	    xx = bitrate.getJSONObject(bt);
 	    ans.put("url", xx.get("file_link"));
 	    
 	    musicMapper.delMusic(musicid);

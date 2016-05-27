@@ -21,7 +21,7 @@ changeMusic = function(taget){
 		}
 	})*/
 	player.attr("src","./music?musicid="+taget.attr("id"));
-	player.play();
+	//player.play();
 }
 getMusicList = function(){
 	$.ajax({
