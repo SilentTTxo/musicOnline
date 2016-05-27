@@ -1,20 +1,25 @@
 package musicOnline;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.HttpException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.omg.CORBA.PRIVATE_MEMBER;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import musicOnline.data.Music;
 import musicOnline.data.User;
@@ -156,10 +161,38 @@ public class login {
 			ans.put("url", temp.get("file_link"));
 			return ans.toString();
 		}
+		if(cmd == 7){//直接返回歌曲数据
+			
+		}
 		if(cmd == 99){//本地debug接口
 			ans = new JSONObject();
 			return yData.getWow("baidu.ting.billboard.billList", type, 100, 0).toString();
 		}
 		return "参数不合法";
+	}
+	
+	@RequestMapping(value="player",method=RequestMethod.GET)
+	public ModelAndView index(){   
+        ModelAndView modelAndView = new ModelAndView();    
+        modelAndView.setViewName("player");  
+        return modelAndView;
+    }
+	
+	@ResponseBody
+	@RequestMapping(value="music",method=RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
+	public InputStream getMusic(Integer musicid,HttpServletResponse response) throws NumberFormatException, HttpException, IllegalArgumentException, JSONException, IOException, InterruptedException{
+		yData.musicMapper = musicMapper;
+		String url = yData.findMusicByIdFromBaidu(musicid).get("file_link").toString();
+		OutputStream os = response.getOutputStream();
+		InputStream in = yData.getMusicByte(url);
+		byte[] b = new byte[1024];  
+		while( in.read(b)!= -1){
+			Thread.sleep(10);
+			os.write(b);     
+		}
+		in.close(); 
+		os.flush();
+		os.close();
+		return null;
 	}
 }

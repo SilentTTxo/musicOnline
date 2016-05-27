@@ -1,12 +1,14 @@
 package musicOnline;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.json.JSONArray;
@@ -102,5 +104,16 @@ public class getData {
 	    musicMapper.addMusic(musicid, songinfo.getString("title"), "active", songinfo.getString("author"), songinfo.getString("album_title"), Integer.parseInt(xx.getString("file_duration")), songinfo.getString("pic_big"), songinfo.getString("lrclink"));
 	    
 		return xx;
+	}
+	
+	public InputStream getMusicByte(String url) throws IOException{
+		HttpClient client = new HttpClient();
+		GetMethod getMethod = new GetMethod(url);
+		client.getParams().setParameter(
+	            HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
+	    // 执行并返回状态
+	    int status = client.executeMethod(getMethod);
+	    InputStream is = getMethod.getResponseBodyAsStream();
+	    return is;
 	}
 }
