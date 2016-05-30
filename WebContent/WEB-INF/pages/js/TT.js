@@ -1,5 +1,18 @@
+var TYPE = "GET";
+
 $(function(){
 	getMusicList();
+	$("#search").click(function(e){
+		$.ajax({
+			type:TYPE,
+			url:"./musiclist",
+			data:{cmd:5,name:$("#name").val()},
+			dataType:"json",
+			success:function(data){
+				changeListData(data);
+			}
+		});
+	});
 })
 changeMusic = function(taget){
 	var player = $("#player");
@@ -25,24 +38,28 @@ changeMusic = function(taget){
 }
 getMusicList = function(){
 	$.ajax({
-		type:"GET",
+		type:TYPE,
 		url:"./musiclist",
 		data:{cmd:1},
 		dataType:"json",
 		success:function(data){
-			var jsondata = eval(data);
-			$(jsondata).each(function(index){
-				var val = jsondata[index];
-				music = val.title+"-"+val.album+"-"+val.artist;
-				$("#list").append("<a href='#' class='list-group-item' id='"+val.id+"'>"+music+"</a>")
-			});
-			$("a").click(function(e){
-				$("a").removeClass("active");
-				This = $(e.target);
-				This.addClass("active");
-				changeMusic(This);
-				return false;
-			})
+			changeListData(data);
 		}
 	});
+}
+changeListData = function(data){
+	$("#list").empty();
+	var jsondata = eval(data);
+	$(jsondata).each(function(index){
+		var val = jsondata[index];
+		music = val.title+"-"+val.album+"-"+val.artist;
+		$("#list").append("<a href='#' class='list-group-item' id='"+val.id+"'>"+music+"</a>")
+	});
+	$("a").click(function(e){
+		$("a").removeClass("active");
+		This = $(e.target);
+		This.addClass("active");
+		changeMusic(This);
+		return false;
+	})
 }
