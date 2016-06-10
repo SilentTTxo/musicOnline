@@ -15,7 +15,7 @@ $(function(){
 	});
 })
 changeMusic = function(taget){
-	var player = $("#player");
+	var playerc = $("#player");
 	/*$.ajax({
 		type:"GET",
 		url:"./musiclist",
@@ -33,8 +33,10 @@ changeMusic = function(taget){
 			player.attr("src",music.url);
 		}
 	})*/
-	player.attr("src","./music?musicid="+taget.attr("id"));
-	//player.play();
+	playerc.attr("src","./music?musicid="+taget.attr("id"));
+	$("a").removeClass("active");
+	taget.addClass("active");
+	player.play();
 }
 getMusicList = function(){
 	$.ajax({
@@ -62,4 +64,10 @@ changeListData = function(data){
 		changeMusic(This);
 		return false;
 	})
+}
+timeupdate = function(){
+	time = player.currentTime;
+	atime = player.duration;
+	$("#plen").width(Math.floor(time/atime*100)+"%");
+	$("#psent").text(Math.floor(time/atime*100)+"%");
 }

@@ -187,7 +187,7 @@ public class login {
 		InputStream in = yData.getMusicByte(url);
 		byte[] b = new byte[1024];  
 		while( in.read(b)!= -1){
-			Thread.sleep(10);
+			Thread.sleep(5);
 			os.write(b);     
 		}
 		in.close(); 

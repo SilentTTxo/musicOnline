@@ -80,6 +80,7 @@ public class getData {
 	    return ans;
 	}
 	public JSONObject findMusicByIdFromBaidu(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
+		if(musicid==null) return null;
 		JSONObject ans = new JSONObject();
 		HttpClient client = new HttpClient();
 		PostMethod postMethod = new PostMethod(baseurl);
@@ -100,6 +101,9 @@ public class getData {
 	    JSONObject xx = null;//设置音质
 	    int bt = 2;
 	    while(bitrate.getJSONObject(bt)==null){
+	    	bt--;
+	    }
+	    if(bitrate.getJSONObject(bt).get("file_link").equals("")){
 	    	bt--;
 	    }
 	    xx = bitrate.getJSONObject(bt);

@@ -1,7 +1,7 @@
+<%@ page language="java" import="java.util.*" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>测试用播放器</title>
 	<!-- 新 Bootstrap 核心 CSS 文件 -->
 	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -18,15 +18,15 @@
 </head>
 <body style="background-color: #003333;">
 <nav class="navbar navbar-default navbar-fixed-top">
-	<div class="progress" style="height:50px;margin-bottom:0px">
-  		<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-    	<p style="font-size:xx-large;margin-top:15px">20%</p>
+	<div class="progress" style="height:50px;margin-bottom:0px" >
+  		<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" id="plen">
+    	<p style="font-size:xx-large;margin-top:15px" id="psent">0%</p>
   		</div>
 	</div>
 </nav>
 	<div class="container">
 		<div class="col-lg-12 well" style="margin-top: 200px;">
-			<audio src="#" controls="controls" style="width: 100%" id="player">辣鸡浏览器</audio>
+			<audio src="#" controls="controls" style="width: 100%" id="player" ontimeupdate="timeupdate()">辣鸡浏览器</audio>
 			<div class="input-group">
       			<input type="text" class="form-control" placeholder="Search for..." id = "name">
       			<span class="input-group-btn">
