@@ -9,7 +9,7 @@
 		select MUSICID AS ID,TITLE,URL,ARTIST,ALBUM,DURATION from LOVEMUSIC join MUSIC on musicid = MUSIC.ID where userid = #{userid}  
 	</select>
 	<select id="findByName" parameterType="String" resultType="Music">
-		select * from MUSIC where TITLE like #{name}  
+		select * from MUSIC where TITLE like #{name} or ARTIST like #{name}  
 	</select>
 	<insert id="addLoveMusic">
 		insert IGNORE into LOVEMUSIC values (NULL,#{0},#{1})

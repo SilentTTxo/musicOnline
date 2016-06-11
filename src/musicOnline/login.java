@@ -24,6 +24,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import musicOnline.data.Music;
 import musicOnline.data.User;
 import musicOnline.mapping.MusicMapper;
+import musicOnline.mapping.SerchLogMapper;
 import musicOnline.mapping.UserMapper;
 
 @Controller
@@ -32,6 +33,8 @@ public class login {
 	private UserMapper userMapper;
 	@Resource
 	private MusicMapper musicMapper;
+	@Resource
+	private SerchLogMapper serchLogMapper;
 	
 	private getData yData = new getData();
 	
@@ -86,6 +89,7 @@ public class login {
 	@RequestMapping(value="musiclist",method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
 	public String musicList(Integer cmd,Integer userid,Integer musicid,Integer type,String name) throws JSONException, HttpException, IOException{
 		yData.musicMapper = musicMapper;
+		yData.serchLogMapper = serchLogMapper;
 		if(cmd == null){
 			ans = new JSONObject();
 			ans.put("state", -1);

@@ -17,9 +17,11 @@ import org.json.JSONObject;
 
 import musicOnline.data.Music;
 import musicOnline.mapping.MusicMapper;
+import musicOnline.mapping.SerchLogMapper;
 
 public class getData {
 	public MusicMapper musicMapper;
+	public SerchLogMapper serchLogMapper;
 	private static String baseurl = "http://tingapi.ting.baidu.com/v1/restserver/ting";
 	private int endNum = 3000 ;
 	
@@ -60,9 +62,12 @@ public class getData {
 	    String data = postMethod.getResponseBodyAsString();
 	    JSONObject gData = new JSONObject(data);
 	    JSONArray songlist = gData.getJSONArray("song");
-	    for(int i = 0;i<songlist.length();i++){
-	    	JSONObject xx = songlist.getJSONObject(i);
-	    	musicMapper.addMusic(Integer.parseInt(xx.get("songid").toString()), xx.get("songname").toString(), "active", xx.get("artistname").toString(), "-1", -1, "-1","-1");
+	    if(serchLogMapper.findByContent(name)==null){
+	    	for(int i = 0;i<songlist.length();i++){
+		    	JSONObject xx = songlist.getJSONObject(i);
+		    	musicMapper.addMusic(Integer.parseInt(xx.get("songid").toString()), xx.get("songname").toString(), "active", xx.get("artistname").toString(), "-1", -1, "-1","-1");
+		    }
+	    	serchLogMapper.addContent(name);
 	    }
 		List<Music> xx = musicMapper.findByName(Lname);
 		for(Music temp : xx){
@@ -99,7 +104,7 @@ public class getData {
 	    
 	    JSONArray bitrate = gData.getJSONArray("bitrate");
 	    JSONObject xx = null;//设置音质
-	    int bt = 2;
+	    int bt = bitrate.length()-1;
 	    while(bitrate.getJSONObject(bt)==null){
 	    	bt--;
 	    }

@@ -3,6 +3,8 @@ var TYPE = "GET";
 $(function(){
 	getMusicList();
 	$("#search").click(function(e){
+		$("#list").hide();
+		$("#load").show();
 		$.ajax({
 			type:TYPE,
 			url:"./musiclist",
@@ -64,6 +66,8 @@ changeListData = function(data){
 		changeMusic(This);
 		return false;
 	})
+	$("#load").hide();
+	$("#list").show();
 }
 timeupdate = function(){
 	time = player.currentTime;
