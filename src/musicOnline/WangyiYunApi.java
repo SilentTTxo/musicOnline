@@ -53,7 +53,7 @@ public class WangyiYunApi extends Api{
 	}
 
 	@Override
-	public String findMusicById(Integer musicid)  throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
+	public JSONObject findMusicById(Integer musicid)  throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
 		// TODO Auto-generated method stub
 		baseurl = "http://music.163.com/api/song/detail/";
 		if(musicid==null) return null;
@@ -70,8 +70,12 @@ public class WangyiYunApi extends Api{
 	    JSONObject gData = new JSONObject(data);
 	    
 	    JSONObject songinfo = gData.getJSONArray("songs").getJSONObject(0);
+	    
+	    ans.put("url", songinfo.get("mp3Url").toString());
+	    ans.put("duration", Integer.parseInt(songinfo.getString("duration"))/1000);
+	    ans.put("pic", songinfo.getJSONObject("album").getString("picUrl"));
 	       
-		return songinfo.get("mp3Url").toString();
+		return ans;
 	}
 
 	

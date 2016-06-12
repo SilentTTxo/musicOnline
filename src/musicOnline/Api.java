@@ -21,5 +21,5 @@ public abstract class Api {
 	public SerchLogMapper serchLogMapper;
 	protected String baseurl ;
 	public abstract JSONArray findMusic(String name) throws HttpException, IOException, JSONException;
-	public abstract String findMusicById(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException;
+	public abstract JSONObject findMusicById(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException;
 }

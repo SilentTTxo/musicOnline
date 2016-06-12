@@ -1,4 +1,5 @@
 var TYPE = "GET";
+var duration = 0;
 
 $(function(){
 	getMusicList();
@@ -35,26 +36,17 @@ changeMusic = function(taget){
 			player.attr("src",music.url);
 		}
 	})*/
-	/*if(taget.attr("id")>300000000){
-		$.ajax({
+	$.ajax({
 		type:"GET",
 		url:"./musiclist",
 		data:{cmd:6,musicid:taget.attr("id")},
 		dataType:"json",
 		success:function(data){
 			var music = eval(data);
-			$.ajax({
-				type:"GET",
-				url:music.url,
-				success:function(data){
-					console.log(data);
-				}
-			});
-			player.attr("src",music.url);
+			duration = music.duration;
+			//player.attr("src",music.url);
 		}
 	})
-		return;
-	}*/
 	playerc.attr("src","./music?musicid="+taget.attr("id"));
 	$("a").removeClass("active");
 	taget.addClass("active");
@@ -91,7 +83,7 @@ changeListData = function(data){
 }
 timeupdate = function(){
 	time = player.currentTime;
-	atime = player.duration;
-	$("#plen").width(Math.floor(time/atime*100)+"%");
-	$("#psent").text(Math.floor(time/atime*100)+"%");
+	atime = duration;
+	$("#plen").width(time/atime*100+"%");
+	$("#psent").text(Math.floor(time/60)+":"+Math.floor(time%60));
 }

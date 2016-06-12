@@ -74,7 +74,7 @@ public class BaiduApi extends Api{
 	    }
 	    return null;
 	}
-	public String findMusicById(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
+	public JSONObject findMusicById(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
 		if(musicid==null) return null;
 		JSONObject ans = new JSONObject();
 		HttpClient client = new HttpClient();
@@ -106,7 +106,10 @@ public class BaiduApi extends Api{
 	    musicMapper.delMusic(musicid);
 	    musicMapper.addMusic(musicid, songinfo.getString("title"), "active", songinfo.getString("author"), songinfo.getString("album_title"), Integer.parseInt(xx.getString("file_duration")), songinfo.getString("pic_big"), songinfo.getString("lrclink"));
 	    
-		return xx.get("file_link").toString();
+	    ans.put("url", xx.get("file_link").toString());
+	    ans.put("duration", Integer.parseInt(xx.getString("file_duration")));
+	    ans.put("pic", songinfo.getString("pic_big"));
+		return ans;
 	}
 	
 	public InputStream getMusicByte(String url) throws IOException{

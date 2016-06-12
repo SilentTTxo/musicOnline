@@ -180,16 +180,13 @@ public class WebInterface {
 			return ansa.toString();
 		}
 		if(cmd == 6){//根据歌曲id获取歌曲各种信息并且附带播放url
-			ans = new JSONObject();
-			String temp = "";
 			if(musicid<300000000){
-				temp = bdData.findMusicById(musicid);
+				ans = bdData.findMusicById(musicid);
 			}
 			else {
 				musicid-=300000000;
-				temp = wyData.findMusicById(musicid);
+				ans = wyData.findMusicById(musicid);
 			}
-			ans.put("url", temp);
 			return ans.toString();
 		}
 		if(cmd == 7){//直接返回歌曲数据
@@ -214,10 +211,10 @@ public class WebInterface {
 	public InputStream getMusic(Integer musicid,HttpServletResponse response) throws NumberFormatException, HttpException, IllegalArgumentException, JSONException, IOException, InterruptedException{
 		String url = "";
 		if(musicid<300000000){
-			url = bdData.findMusicById(musicid);
+			url = bdData.findMusicById(musicid).getString("url");
 		}
 		else{
-			url = wyData.findMusicById(musicid-300000000);
+			url = wyData.findMusicById(musicid-300000000).getString("url");
 		}
 		OutputStream os = response.getOutputStream();
 		InputStream in = bdData.getMusicByte(url);
