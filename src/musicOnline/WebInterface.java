@@ -26,17 +26,20 @@ import musicOnline.data.User;
 import musicOnline.mapping.MusicMapper;
 import musicOnline.mapping.SerchLogMapper;
 import musicOnline.mapping.UserMapper;
+import musicOnline.BaiduApi;
 
 @Controller
-public class login {
+public class WebInterface {
 	@Resource
 	private UserMapper userMapper;
 	@Resource
 	private MusicMapper musicMapper;
 	@Resource
 	private SerchLogMapper serchLogMapper;
-	
-	private getData yData = new getData();
+	@Resource
+	private BaiduApi bdData ;//百度api调用类
+	@Resource
+	private WangyiYunApi wyData;//网易云api调用
 	
 	JSONObject ans = null;
 	
@@ -88,8 +91,6 @@ public class login {
 	@ResponseBody
 	@RequestMapping(value="musiclist",method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
 	public String musicList(Integer cmd,Integer userid,Integer musicid,Integer type,String name) throws JSONException, HttpException, IOException{
-		yData.musicMapper = musicMapper;
-		yData.serchLogMapper = serchLogMapper;
 		if(cmd == null){
 			ans = new JSONObject();
 			ans.put("state", -1);
@@ -157,12 +158,38 @@ public class login {
 			return ans.toString();
 		}
 		if(cmd == 5){//按歌曲名查找
-			return yData.findMusic(name).toString();
+			JSONArray ansa = new JSONArray();
+			bdData.findMusic(name);
+			wyData.findMusic(name);
+			List<Music> xx = musicMapper.findByName("%"+name+"%");
+			for(Music temp : xx){
+				JSONObject js = new JSONObject();
+				js.put("id", temp.getId());
+				js.put("album", temp.getAlbum());
+				js.put("artist", temp.getArtist());
+				js.put("title", temp.getTitle());
+				js.put("url", temp.getUrl());
+				js.put("duration", temp.getDuration());
+				js.put("lrc", temp.getLrc());
+				js.put("img", temp.getImg());
+				ansa.put(js);
+			}
+			if(serchLogMapper.findByContent(name)==null){
+				serchLogMapper.addContent(name);
+			}
+			return ansa.toString();
 		}
 		if(cmd == 6){//根据歌曲id获取歌曲各种信息并且附带播放url
 			ans = new JSONObject();
-			JSONObject temp = yData.findMusicByIdFromBaidu(musicid);
-			ans.put("url", temp.get("file_link"));
+			String temp = "";
+			if(musicid<300000000){
+				temp = bdData.findMusicById(musicid);
+			}
+			else {
+				musicid-=300000000;
+				temp = wyData.findMusicById(musicid);
+			}
+			ans.put("url", temp);
 			return ans.toString();
 		}
 		if(cmd == 7){//直接返回歌曲数据
@@ -170,7 +197,7 @@ public class login {
 		}
 		if(cmd == 99){//本地debug接口
 			ans = new JSONObject();
-			return yData.getWow("baidu.ting.billboard.billList", type, 100, 0).toString();
+			return bdData.getWow("baidu.ting.billboard.billList", type, 100, 0).toString();
 		}
 		return "参数不合法";
 	}
@@ -185,10 +212,15 @@ public class login {
 	@ResponseBody
 	@RequestMapping(value="music",method=RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
 	public InputStream getMusic(Integer musicid,HttpServletResponse response) throws NumberFormatException, HttpException, IllegalArgumentException, JSONException, IOException, InterruptedException{
-		yData.musicMapper = musicMapper;
-		String url = yData.findMusicByIdFromBaidu(musicid).get("file_link").toString();
+		String url = "";
+		if(musicid<300000000){
+			url = bdData.findMusicById(musicid);
+		}
+		else{
+			url = wyData.findMusicById(musicid-300000000);
+		}
 		OutputStream os = response.getOutputStream();
-		InputStream in = yData.getMusicByte(url);
+		InputStream in = bdData.getMusicByte(url);
 		byte[] b = new byte[1024];  
 		while( in.read(b)!= -1){
 			Thread.sleep(5);

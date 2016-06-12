@@ -35,6 +35,26 @@ changeMusic = function(taget){
 			player.attr("src",music.url);
 		}
 	})*/
+	/*if(taget.attr("id")>300000000){
+		$.ajax({
+		type:"GET",
+		url:"./musiclist",
+		data:{cmd:6,musicid:taget.attr("id")},
+		dataType:"json",
+		success:function(data){
+			var music = eval(data);
+			$.ajax({
+				type:"GET",
+				url:music.url,
+				success:function(data){
+					console.log(data);
+				}
+			});
+			player.attr("src",music.url);
+		}
+	})
+		return;
+	}*/
 	playerc.attr("src","./music?musicid="+taget.attr("id"));
 	$("a").removeClass("active");
 	taget.addClass("active");

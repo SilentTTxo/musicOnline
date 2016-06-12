@@ -14,16 +14,21 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import musicOnline.data.Music;
 import musicOnline.mapping.MusicMapper;
 import musicOnline.mapping.SerchLogMapper;
 
-public class getData {
-	public MusicMapper musicMapper;
-	public SerchLogMapper serchLogMapper;
-	private static String baseurl = "http://tingapi.ting.baidu.com/v1/restserver/ting";
+@Component
+public class BaiduApi extends Api{
+	
 	private int endNum = 3000 ;
+	
+	public BaiduApi() {
+		// TODO Auto-generated constructor stub
+		baseurl = "http://tingapi.ting.baidu.com/v1/restserver/ting";
+	}
 	
 	public JSONObject getWow(String method,int type,int size,int offset) throws HttpException, IOException, JSONException{
 		if(offset == endNum) return null;
@@ -49,7 +54,6 @@ public class getData {
 	    return gData;
 	}
 	public JSONArray findMusic(String name) throws HttpException, IOException, JSONException{
-		String Lname = "%"+name+"%";
 		JSONArray ans = new JSONArray();
 		HttpClient client = new HttpClient();
 		PostMethod postMethod = new PostMethod(baseurl);
@@ -67,24 +71,10 @@ public class getData {
 		    	JSONObject xx = songlist.getJSONObject(i);
 		    	musicMapper.addMusic(Integer.parseInt(xx.get("songid").toString()), xx.get("songname").toString(), "active", xx.get("artistname").toString(), "-1", -1, "-1","-1");
 		    }
-	    	serchLogMapper.addContent(name);
 	    }
-		List<Music> xx = musicMapper.findByName(Lname);
-		for(Music temp : xx){
-			JSONObject js = new JSONObject();
-			js.put("id", temp.getId());
-			js.put("album", temp.getAlbum());
-			js.put("artist", temp.getArtist());
-			js.put("title", temp.getTitle());
-			js.put("url", temp.getUrl());
-			js.put("duration", temp.getDuration());
-			js.put("lrc", temp.getLrc());
-			js.put("img", temp.getImg());
-			ans.put(js);
-		}
-	    return ans;
+	    return null;
 	}
-	public JSONObject findMusicByIdFromBaidu(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
+	public String findMusicById(Integer musicid) throws HttpException, IOException, JSONException, NumberFormatException, IllegalArgumentException{
 		if(musicid==null) return null;
 		JSONObject ans = new JSONObject();
 		HttpClient client = new HttpClient();
@@ -112,12 +102,11 @@ public class getData {
 	    	bt--;
 	    }
 	    xx = bitrate.getJSONObject(bt);
-	    ans.put("url", xx.get("file_link"));
 	    
 	    musicMapper.delMusic(musicid);
 	    musicMapper.addMusic(musicid, songinfo.getString("title"), "active", songinfo.getString("author"), songinfo.getString("album_title"), Integer.parseInt(xx.getString("file_duration")), songinfo.getString("pic_big"), songinfo.getString("lrclink"));
 	    
-		return xx;
+		return xx.get("file_link").toString();
 	}
 	
 	public InputStream getMusicByte(String url) throws IOException{
