@@ -16,8 +16,33 @@ $(function(){
 			}
 		});
 	});
+	$(".slider")
+    .slider({
+        max: 100,
+        value: 100
+    })
+    .slider("pips", {
+        rest: false
+    }).on("slidechange", function(e,ui) {
+    	volume = ui.value/100;
+    	player.volume = volume;
+    });
+    $(".btn-play").click(function(e){
+    	if($("#pic-play").attr("class")=="glyphicon glyphicon-pause"){
+    		player.pause();
+    		$("#pic-play").removeClass("glyphicon-pause");
+    		$("#pic-play").addClass("glyphicon-play");
+    		return false;
+    	}
+    	if($("#pic-play").attr("class")=="glyphicon glyphicon-play"){
+    		player.play();
+    		$("#pic-play").removeClass("glyphicon-play");
+    		$("#pic-play").addClass("glyphicon-pause");
+    		return false;
+    	}
+    });
 })
-changeMusic = function(taget){
+changeMusic = function(taget){//换歌!
 	var playerc = $("#player");
 	/*$.ajax({
 		type:"GET",
@@ -48,9 +73,11 @@ changeMusic = function(taget){
 		}
 	})
 	playerc.attr("src","./music?musicid="+taget.attr("id"));
-	$("a").removeClass("active");
+	$("#list-group-item").removeClass("active");
 	taget.addClass("active");
 	player.play();
+	$("#pic-play").removeClass();
+	$("#pic-play").addClass("glyphicon glyphicon-pause");
 }
 getMusicList = function(){
 	$.ajax({
@@ -62,6 +89,7 @@ getMusicList = function(){
 			changeListData(data);
 		}
 	});
+	player.value=0.5;
 }
 changeListData = function(data){
 	$("#list").empty();
@@ -71,8 +99,8 @@ changeListData = function(data){
 		music = val.title+"-"+val.album+"-"+val.artist;
 		$("#list").append("<a href='#' class='list-group-item' id='"+val.id+"'>"+music+"</a>")
 	});
-	$("a").click(function(e){
-		$("a").removeClass("active");
+	$(".list-group-item").click(function(e){
+		$(".list-group-item").removeClass("active");
 		This = $(e.target);
 		This.addClass("active");
 		changeMusic(This);
