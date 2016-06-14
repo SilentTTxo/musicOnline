@@ -112,7 +112,7 @@ public class BaiduApi extends Api{
 		return ans;
 	}
 	
-	public InputStream getMusicByte(String url) throws IOException{
+	public InputStream getMusicByte(String url) throws IOException{//讲道理，这段代码不应该在这个类
 		HttpClient client = new HttpClient();
 		GetMethod getMethod = new GetMethod(url);
 		client.getParams().setParameter(
