@@ -58,14 +58,14 @@ public class WebInterface {
 			ans.put("content","用户名不存在");
 		}
 		else{
-			if(!xx.getPassword().equals(password)){
-				ans.put("state", 1);
-				ans.put("content","密码错误");
-			}
-			else {
+			if(xx.getPassword().equals(password)){
 				ans.put("state", 2);
 				ans.put("content","登录成功");
 				ans.put("userid", xx.getId());
+			}
+			else {
+				ans.put("state", 1);
+				ans.put("content","密码错误");
 			}
 		}
 		return ans.toString();

@@ -12,6 +12,7 @@
 	<!-- plus a jQuery UI theme, here I use "flick" -->
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/flick/jquery-ui.css">
 	<link rel="stylesheet" href="./css/jquery-ui-slider-pips.min.css">
+	<link rel="stylesheet" href="./css/TT.css">
 
 	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
@@ -22,7 +23,7 @@
 	<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="./js/TT.js"></script>
 	<link rel="stylesheet" href="./css/loaders.css"></head>
-<body style="background-color: #003333;">
+<body style="background-color: #4c5059;">
 	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="navbar-header">
 			<ul class="nav navbar-nav">
@@ -34,7 +35,7 @@
 			</ul>
 		</div>
 		<div class="collapse navbar-collapse">
-			<ul class="nav navbar-nav" style="width: 82%;">
+			<ul class="nav navbar-nav" style="width: 88%;">
 				<div class="progress" style="height:50px;margin-bottom:0px" >
 					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" id="plen">
 						<p style="font-size:x-large;margin-top:15px" id="psent">0:0</p>
