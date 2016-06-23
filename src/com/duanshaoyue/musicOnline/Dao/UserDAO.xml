@@ -17,4 +17,10 @@
 	<insert id="register" parameterType="User">
 		insert into USER values (NULL,#{username},#{password})
 	</insert>
+	<update id="updatePassword" >
+		update USER set PASSWORD = #{1} where id = #{0}
+	</update>
+	<delete id="delById">
+		DELETE FROM USER where id = #{0} 
+	</delete>
 </mapper>
