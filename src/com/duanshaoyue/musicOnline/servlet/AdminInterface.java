@@ -84,8 +84,64 @@ public class AdminInterface {
 		return model;
 	}
 	@RequestMapping(value="AMusic")
-	public ModelAndView AMusic(Model mm){
+	public ModelAndView AMusic(Model mm,String album){
 		if(httpSession.getAttribute("user")==null) return new ModelAndView("Login");
+		ModelAndView model = new ModelAndView();
+		if(album==null){
+			List list = musicDAO.findAll();
+			mm.addAttribute("list", list);
+		}
+		else{
+			List list = musicDAO.findByName(album);
+			mm.addAttribute("list", list);
+		}
+		model.setViewName("AMusic");
+		return model;
+	}
+	@RequestMapping(value="AMusicAlbum")
+	public ModelAndView AMusicAlbum(Model mm,String artist,String delAlbum){
+		if(httpSession.getAttribute("user")==null) return new ModelAndView("Login");
+		ModelAndView model = new ModelAndView();
+		String Rartist = artist;
+		if(artist==null) Rartist="%%";
+		else Rartist = "%"+artist+"%";
+		if(delAlbum!=null){
+			musicDAO.delAlbum(artist, delAlbum);
+		}
+		List list = musicDAO.findAlbumByArtist(artist);
+		mm.addAttribute("list", list);
+		mm.addAttribute("artist",artist);
+		model.setViewName("AMusicAlbum");
+		return model;
+	}
+	@RequestMapping(value="AMusicFix")
+	public ModelAndView AMusicFix(Model mm,Integer id,String title,String album,String artist){
+		if(httpSession.getAttribute("user")==null) return new ModelAndView("Login");
+		ModelAndView model = new ModelAndView();
+		if(id==null){
+			List list = musicDAO.findAll();
+			mm.addAttribute("list", list);
+			mm.addAttribute("id",id);
+			model.setViewName("AMusic");
+		}
+		else if(title==null){
+			mm.addAttribute("id",id);
+			model.setViewName("AMusicFix");
+		}else{
+			musicDAO.updateMusic(id, album, title, artist);
+			List list = musicDAO.findAll();
+			mm.addAttribute("list", list);
+			mm.addAttribute("id",id);
+			model.setViewName("AMusic");
+		}
+		return model;
+	}
+	@RequestMapping(value="AMusicDel")
+	public ModelAndView AMusicDel(Model mm,Integer id){
+		if(httpSession.getAttribute("user")==null) return new ModelAndView("Login");
+		if(id!=null){
+			musicDAO.delMusic(id);
+		}
 		ModelAndView model = new ModelAndView();
 		List list = musicDAO.findAll();
 		mm.addAttribute("list", list);

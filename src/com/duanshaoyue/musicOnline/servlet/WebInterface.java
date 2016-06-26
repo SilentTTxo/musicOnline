@@ -54,6 +54,7 @@ public class WebInterface {
 	@RequestMapping(value="login",method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
 	public String login(String username,String password) throws JSONException{
 		ans = new JSONObject();
+		System.out.println(username+":"+password);
 		User xx = userMapper.findByName(username);
 		if(xx == null){
 			ans.put("state", 0);

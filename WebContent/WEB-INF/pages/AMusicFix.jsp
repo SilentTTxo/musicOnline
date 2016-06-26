@@ -3,13 +3,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Index</title>
+<title>登陆</title>
 </head>
 <body>
 <h3>${message}</h3>
-<a href="./AFixPassword">修改密码</a>
-<a href="./AExit">退出登录</a>
-<a href="./AUser">用户信息</a>
-<a href="./AMusic">歌曲管理</a>
+<form method="POST" action="./AMusicFix" }>
+	<input type="text" name="id" value="${id}" hidden="true"/>
+	<input type="text" name="title" />
+	<input type="text" name="aritist" />
+	<input type="text" name="album" />
+	<button type="submit">修改</button>
+</form>
 </body>
 </html>

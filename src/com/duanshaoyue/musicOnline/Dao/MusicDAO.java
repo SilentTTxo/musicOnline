@@ -12,5 +12,9 @@ public interface MusicDAO {
 	int delLoveMusic(Integer userid,Integer musicid);
 	int addMusic(Integer id,String title,String url,String artist,String album,int duration,String img,String lrc);
 	List<Music> findByName(String name);
+	List<Music> findByAlbum(String name);
+	List<Music> findAlbumByArtist(String name);
 	int delMusic(Integer musicid);
+	int delAlbum(String artist,String delAlbum);
+	int updateMusic(int musicid,String album,String title,String artist);
 }

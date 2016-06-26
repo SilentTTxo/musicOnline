@@ -11,11 +11,20 @@
 	<select id="findByName" parameterType="String" resultType="Music">
 		select * from MUSIC where TITLE like #{name} or ARTIST like #{name}  
 	</select>
+	<select id="findByAlbum" parameterType="String" resultType="Music">
+		select * from MUSIC where Album like #{name}  
+	</select>
+	<select id="findAlbumByArtist" parameterType="String" resultType="Music">
+		SELECT * from MUSIC where artist like #{name} GROUP BY ALBUM   
+	</select>
 	<insert id="addLoveMusic">
 		insert IGNORE into LOVEMUSIC values (NULL,#{0},#{1})
 	</insert>
 	<delete id="delMusic" parameterType="Integer">
 		DELETE FROM MUSIC where ID = #{musicid}
+	</delete>
+	<delete id="delAlbum">
+		DELETE FROM MUSIC where ARTIST like #{0} and ALBUM = #{1};
 	</delete>
 	<delete id="delLoveMusic">
 		DELETE FROM LOVEMUSIC where userid = #{0} and musicid = #{1}
@@ -23,4 +32,7 @@
 	<insert id="addMusic">
 		insert IGNORE into MUSIC values (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7})
 	</insert>
+	<update id="updateMusic" >
+		update MUSIC set ALBUM = #{1},TITLE= #{2},ARTIST=#{3} where id = #{0}
+	</update>
 </mapper>
